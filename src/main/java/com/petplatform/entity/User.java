@@ -1,69 +1,62 @@
 package com.petplatform.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
+@Data
 @Entity
 @Table(name = "users")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, length = 100)
+    @Column(unique = true)
     private String email;
 
-    @Column(name = "phone", length = 20)
     private String phone;
-
-    @Column(name = "real_name", length = 50)
-    private String realName;
-
-    @Column(length = 200)
     private String address;
+    private String avatar = "default-avatar.png";
 
-    @Column(name = "avatar_url")
-    private String avatarUrl = "/static/images/default-avatar.png";
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USER;
 
-    @Column(name = "is_enabled")
-    private Boolean enabled = true;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime = new Date();
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @Column(name = "last_login_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastLoginTime;
+    // 用户拥有的宠物
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Pet> pets = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Adoption> adoptions = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Foster> fosters = new HashSet<>();
+    // 用户的领养记录
+    @OneToMany(mappedBy = "adopter")
+    private List<Adoption> adoptions = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
-        createTime = new Date();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public enum UserRole {
+        USER, ADMIN
     }
 }

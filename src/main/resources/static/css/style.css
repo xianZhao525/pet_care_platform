@@ -1,0 +1,100 @@
+/* 基础样式 */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* 导航栏 */
+.navbar-brand {
+    font-weight: bold;
+    color: #ff6b6b !important;
+}
+
+.navbar-brand i {
+    margin-right: 8px;
+}
+
+/* 首页横幅 */
+.hero-section {
+    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    padding: 80px 0;
+    border-radius: 0 0 20px 20px;
+}
+
+/* 卡片样式 */
+.service-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.pet-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    height: 100%;
+}
+
+.pet-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.pet-card img {
+    height: 250px;
+    object-fit: cover;
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #ff5252;
+    border-color: #ff5252;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+    border-radius: 20px;
+}
+
+.btn-outline-primary:hover {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+/* 页脚 */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 40px 0;
+    margin-top: 60px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 0;
+        text-align: center;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+}
