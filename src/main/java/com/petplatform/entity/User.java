@@ -3,8 +3,6 @@ package com.petplatform.entity;
 import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -36,14 +34,6 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    // 用户拥有的宠物
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Pet> pets = new ArrayList<>();
-
-    // 用户的领养记录
-    @OneToMany(mappedBy = "adopter")
-    private List<Adoption> adoptions = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

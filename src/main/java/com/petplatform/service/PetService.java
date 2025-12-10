@@ -1,36 +1,22 @@
 package com.petplatform.service;
 
 import com.petplatform.entity.Pet;
-import com.petplatform.dto.PetDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 public interface PetService {
 
-    Pet addPet(PetDTO petDTO);
-
-    Pet updatePet(Long petId, PetDTO petDTO);
-
-    void deletePet(Long petId);
-
-    Pet getPetById(Long petId);
-
     List<Pet> getAllPets();
-
-    Page<Pet> getPetsByPage(Pageable pageable);
-
-    List<Pet> searchPets(String keyword, String type);
 
     List<Pet> getAvailablePets();
 
-    List<Pet> getRecentPets(int limit);
+    Optional<Pet> getPetById(Long id);
 
-    void changePetStatus(Long petId, String status);
+    Pet savePet(Pet pet);
 
-    long getPetCount();
+    void deletePet(Long id);
 
-    Map<String, Long> getPetStatistics();
+    List<Pet> searchPets(String keyword);
+
+    List<Pet> getPetsByType(String type);
 }
