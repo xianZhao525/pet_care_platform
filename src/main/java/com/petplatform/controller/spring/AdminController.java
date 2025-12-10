@@ -86,9 +86,16 @@ public class AdminController {
         }
 
         try {
-            // 这里简化处理，实际应该有启用/禁用功能
-            User user = userService.getUserById(id);
-            model.addAttribute("success", "用户状态已更新");
+            // 修复：getUserById返回Optional，需要处理
+            Optional<User> userOptional = userService.getUserById(id);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                // 这里可以添加启用/禁用的逻辑
+                // 例如：user.setEnabled(!user.getEnabled());
+                model.addAttribute("success", "用户状态已更新");
+            } else {
+                model.addAttribute("error", "用户不存在");
+            }
             return "redirect:/admin/users";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -113,7 +120,6 @@ public class AdminController {
     // 检查管理员权限
     private boolean isAdmin(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        return user != null && user.getRoles().stream()
-                .anyMatch(role -> "ADMIN".equals(role.getName()));
+        return user != null && User.UserRole.ADMIN.equals(user.getRole());
     }
 }

@@ -1,4 +1,4 @@
-package main.java.com.petplatform.service.impl;
+package com.petplatform.service.impl;
 
 import com.petplatform.dao.UserRepository;
 import com.petplatform.dao.RoleRepository;
@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,103 +33,68 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User registerUser(UserDTO userDTO) {
-        if (existsByUsername(userDTO.getUsername())) {
+    public User register(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("用户名已存在");
         }
-
-        if (existsByEmail(userDTO.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("邮箱已被注册");
         }
 
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-        user.setRealName(userDTO.getRealName());
-        user.setAddress(userDTO.getAddress());
-
-        // 默认分配USER角色
-        Role userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("角色不存在"));
-        Set<Role> roles = new HashSet<>();
-        roles.add(userRole);
-        user.setRoles(roles);
-
+        // 加密密码
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     @Override
-    public User login(String username, String password) {
+    public Optional<User> login(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent()) {
-            throw new RuntimeException("用户不存在");
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return Optional.of(user);
+            }
         }
-
-        User user = userOptional.get();
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("密码错误");
-        }
-
-        if (!user.getEnabled()) {
-            throw new RuntimeException("账户已被禁用");
-        }
-
-        // 更新最后登录时间
-        user.setLastLoginTime(new java.util.Date());
-        userRepository.save(user);
-
-        return user;
+        return Optional.empty();
     }
 
     @Override
-    public User updateUser(Long userId, UserDTO userDTO) {
-        User user = getUserById(userId);
+    public User updateProfile(Long userId, User updatedUser) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
 
-        if (userDTO.getEmail() != null && !userDTO.getEmail().equals(user.getEmail())) {
-            if (existsByEmail(userDTO.getEmail())) {
-                throw new RuntimeException("邮箱已被使用");
-            }
-            user.setEmail(userDTO.getEmail());
-        }
-
-        if (userDTO.getPhone() != null) {
-            user.setPhone(userDTO.getPhone());
-        }
-
-        if (userDTO.getRealName() != null) {
-            user.setRealName(userDTO.getRealName());
-        }
-
-        if (userDTO.getAddress() != null) {
-            user.setAddress(userDTO.getAddress());
-        }
-
-        if (userDTO.getAvatarUrl() != null) {
-            user.setAvatarUrl(userDTO.getAvatarUrl());
-        }
+        user.setEmail(updatedUser.getEmail());
+        user.setPhone(updatedUser.getPhone());
+        user.setAddress(updatedUser.getAddress());
+        user.setAvatar(updatedUser.getAvatar());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
     public void deleteUser(Long userId) {
-        User user = getUserById(userId);
-        user.setEnabled(false);
-        userRepository.save(user);
+        userRepository.deleteById(userId);
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+    public Optional<User> getUserById(Long userId) {
+        return userRepository.findById(userId);
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    // 新增方法：用于AdminController
+    @Override
+    public long getUserCount() {
+        return userRepository.count();
     }
 
     @Override
@@ -138,73 +104,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUsers(String keyword) {
-        return userRepository.searchUsers(keyword);
-    }
-
-    @Override
-    public void changePassword(Long userId, String oldPassword, String newPassword) {
-        User user = getUserById(userId);
-
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new RuntimeException("原密码错误");
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-
-    @Override
-    public void resetPassword(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("邮箱未注册"));
-
-        // 生成随机密码
-        String randomPassword = generateRandomPassword();
-        user.setPassword(passwordEncoder.encode(randomPassword));
-        userRepository.save(user);
-
-        // 发送邮件（这里可以集成邮件服务）
-        // emailService.sendPasswordResetEmail(email, randomPassword);
-    }
-
-    @Override
-    public void updateUserRole(Long userId, List<String> roleNames) {
-        User user = getUserById(userId);
-        Set<Role> roles = new HashSet<>();
-
-        for (String roleName : roleNames) {
-            Role role = roleRepository.findByName(roleName)
-                    .orElseThrow(() -> new RuntimeException("角色不存在: " + roleName));
-            roles.add(role);
-        }
-
-        user.setRoles(roles);
-        userRepository.save(user);
-    }
-
-    @Override
-    public long getUserCount() {
-        return userRepository.count();
-    }
-
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    private String generateRandomPassword() {
-        // 生成8位随机密码
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder password = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            int index = (int) (Math.random() * chars.length());
-            password.append(chars.charAt(index));
-        }
-        return password.toString();
+        // 修复：使用 collect(Collectors.toList()) 而不是 .toList()
+        List<User> allUsers = userRepository.findAll();
+        return allUsers.stream()
+                .filter(user -> user.getUsername().toLowerCase().contains(keyword.toLowerCase()) ||
+                        (user.getEmail() != null && user.getEmail().toLowerCase().contains(keyword.toLowerCase())) ||
+                        (user.getPhone() != null && user.getPhone().contains(keyword)))
+                .collect(Collectors.toList());
     }
 }
