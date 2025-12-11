@@ -20,6 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, Long id);
 
     // 分页查询（继承自JpaRepository，已存在）
     Page<User> findAll(Pageable pageable);

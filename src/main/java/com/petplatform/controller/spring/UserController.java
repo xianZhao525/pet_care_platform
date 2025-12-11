@@ -66,11 +66,12 @@ public class UserController {
         }
 
         try {
-            User user = userService.login(loginDTO.getUsername(), loginDTO.getPassword());
+            User user = userService.login(loginDTO.getUsername(), loginDTO.getPassword())
+                    .orElseThrow(() -> new Exception("用户名或密码错误"));
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("username", user.getUsername());
-
+            
             // 重定向到首页
             return "redirect:/";
         } catch (Exception e) {
@@ -95,7 +96,8 @@ public class UserController {
         }
 
         try {
-            User user = userService.getUserById(userId);
+            User user = userService.getUserById(userId)
+                    .orElseThrow(() -> new Exception("用户不存在"));
             model.addAttribute("user", user);
             return "user/profile";
         } catch (Exception e) {
@@ -135,7 +137,8 @@ public class UserController {
     @ResponseBody
     public ApiResponse<User> getUserById(@PathVariable Long id) {
         try {
-            User user = userService.getUserById(id);
+            User user = userService.getUserById(id)
+                    .orElseThrow(() -> new RuntimeException("用户不存在"));
             return ApiResponse.success(user);
         } catch (Exception e) {
             return ApiResponse.error(e.getMessage());

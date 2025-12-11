@@ -1,5 +1,7 @@
+// UserService.java
 package com.petplatform.service;
 
+import com.petplatform.dto.UserDTO;
 import com.petplatform.entity.User;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +24,14 @@ public interface UserService {
 
     Optional<User> getUserByUsername(String username);
 
-    long getUserCount(); // 用于dashboard页面
+    long getUserCount();
 
-    Page<User> getAllUsers(Pageable pageable); // 分页查询，用于manageUsers页面
+    Page<User> getAllUsers(Pageable pageable);
 
-    List<User> searchUsers(String keyword); // 搜索用户，用于manageUsers页面
+    List<User> searchUsers(String keyword);
+    
+    // 添加Controller需要的方法
+    User registerUser(UserDTO userDTO);  // 从UserDTO注册
+    
+    User updateUser(Long userId, UserDTO userDTO);  // 使用UserDTO更新用户
 }

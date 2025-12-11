@@ -48,6 +48,10 @@ public class Pet {
     }
 
     public enum PetStatus {
-        AVAILABLE, ADOPTED, FOSTERED, PENDING
+        AVAILABLE,          // 可领养
+        ADOPTED,           // 已领养
+        FOSTERED,          // 寄养中
+        PENDING,           // 待处理（通用）
+        PENDING_ADOPTION   // 待领养（用于领养申请）
     }
 }

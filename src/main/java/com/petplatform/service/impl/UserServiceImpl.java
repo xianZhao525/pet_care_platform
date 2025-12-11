@@ -112,4 +112,64 @@ public class UserServiceImpl implements UserService {
                         (user.getPhone() != null && user.getPhone().contains(keyword)))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public User registerUser(UserDTO userDTO) {
+        // 检查用户名和邮箱是否已存在
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new RuntimeException("用户名已存在");
+        }
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new RuntimeException("邮箱已被注册");
+        }
+        
+        // 创建User对象
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 加密密码
+        user.setEmail(userDTO.getEmail());
+        user.setPhone(userDTO.getPhone());
+        user.setAddress(userDTO.getAddress());
+        
+        // 如果有头像URL，设置头像
+        if (userDTO.getAvatarUrl() != null && !userDTO.getAvatarUrl().isEmpty()) {
+            user.setAvatar(userDTO.getAvatarUrl());
+        }
+        
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(Long userId, UserDTO userDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
+        
+        // 更新邮箱（如果提供了新邮箱且与旧邮箱不同）
+        if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty() 
+                && !userDTO.getEmail().equals(user.getEmail())) {
+            // 检查新邮箱是否已被其他用户使用
+            if (userRepository.existsByEmailAndIdNot(userDTO.getEmail(), userId)) {
+                throw new RuntimeException("邮箱已被其他用户使用");
+            }
+            user.setEmail(userDTO.getEmail());
+        }
+        
+        // 更新其他字段
+        if (userDTO.getPhone() != null) {
+            user.setPhone(userDTO.getPhone());
+        }
+        if (userDTO.getAddress() != null) {
+            user.setAddress(userDTO.getAddress());
+        }
+        if (userDTO.getAvatarUrl() != null && !userDTO.getAvatarUrl().isEmpty()) {
+            user.setAvatar(userDTO.getAvatarUrl());
+        }
+        
+        // 如果需要更新密码
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+        
+        return userRepository.save(user);
+    }
 }

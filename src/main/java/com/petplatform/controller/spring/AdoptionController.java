@@ -172,10 +172,8 @@ public class AdoptionController {
         }
     }
 
-    // 检查管理员权限
     private boolean isAdmin(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        return user != null && user.getRoles().stream()
-                .anyMatch(role -> "ADMIN".equals(role.getName()));
+        return user != null && user.getRole() == User.UserRole.ADMIN;
     }
 }
