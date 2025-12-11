@@ -9,7 +9,6 @@ E:\pet_care_platform\src\main\java\com\petplatform\controller\servlet\AdoptionSe
 E:\pet_care_platform\src\main\java\com\petplatform\dto\PetDTO.java
 E:\pet_care_platform\src\main\java\com\petplatform\service\impl\PetServiceImpl.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\Role.java
-E:\pet_care_platform\src\main\java\com\petplatform\service\UserServiceImpl.java
 E:\pet_care_platform\src\main\java\com\petplatform\controller\servlet\UserServlet.java
 E:\pet_care_platform\src\main\java\com\petplatform\exception\BusinessException.java
 E:\pet_care_platform\src\main\java\com\petplatform\service\AdoptionService.java
