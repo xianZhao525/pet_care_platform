@@ -1,9 +1,7 @@
 package com.petplatform.service.impl;
 
 import com.petplatform.dao.UserRepository;
-import com.petplatform.dao.RoleRepository;
 import com.petplatform.entity.User;
-import com.petplatform.entity.Role;
 import com.petplatform.dto.UserDTO;
 import com.petplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +21,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
