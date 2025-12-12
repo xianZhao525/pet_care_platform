@@ -6,12 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宠物领养平台</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero-section { background: #f8f9fa; padding: 60px 0; }
+        .service-card { border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .pet-card { transition: transform 0.3s; }
+        .pet-card:hover { transform: translateY(-5px); }
+    </style>
 </head>
 <body>
-    <jsp:include page="/WEB-INF/views/common/header.jsp"/>
+    <%@ include file="common/header.jsp" %>
     
     <!-- 首页横幅 -->
     <div class="hero-section">
@@ -92,10 +97,13 @@
         </div>
     </div>
     
-    <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+    <%@ include file="common/footer.jsp" %>
     
-    <script src="/js/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <%-- <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/main.js"></script> --%>
 </body>
 </html>
