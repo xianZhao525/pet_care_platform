@@ -19,6 +19,7 @@ com\petplatform\dto\AdoptionDTO.class
 com\petplatform\dto\PetDTO.class
 com\petplatform\dao\AdoptionRepository.class
 com\petplatform\controller\spring\UserController.class
+com\petplatform\controller\TestController.class
 com\petplatform\dto\UserDTO.class
 com\petplatform\util\FileUploadUtil.class
 com\petplatform\PetCareApplication.class
