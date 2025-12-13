@@ -28,6 +28,7 @@ com\petplatform\dto\ApiResponse.class
 com\petplatform\entity\Pet.class
 com\petplatform\service\impl\UserServiceImpl.class
 com\petplatform\entity\Adoption.class
+com\petplatform\controller\DebugController.class
 com\petplatform\service\PetService.class
 com\petplatform\service\impl\AdoptionServiceImpl.class
 com\petplatform\entity\Pet$PetStatus.class

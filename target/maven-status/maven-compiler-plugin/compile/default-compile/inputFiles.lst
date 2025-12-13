@@ -16,6 +16,7 @@ E:\pet_care_platform\src\main\java\com\petplatform\util\PageUtil.java
 E:\pet_care_platform\src\main\java\com\petplatform\config\JspConfig.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\Adoption.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\Pet.java
+E:\pet_care_platform\src\main\java\com\petplatform\controller\DebugController.java
 E:\pet_care_platform\src\main\java\com\petplatform\dto\UserDTO.java
 E:\pet_care_platform\src\main\java\com\petplatform\service\impl\FosterServiceImpl.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\Foster.java

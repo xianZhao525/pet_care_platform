@@ -45,8 +45,8 @@ public class DebugController {
         return "{\"status\":\"running\",\"time\":\"" + new java.util.Date() + "\"}";
     }
 
-    @GetMapping("/health")
-    public String health() {
-        return "{\"status\":\"UP\",\"timestamp\":\"" + new java.util.Date() + "\"}";
-    }
+    // @GetMapping("/health")
+    // public String health() {
+    // return "{\"status\":\"UP\",\"timestamp\":\"" + new java.util.Date() + "\"}";
+    // }
 }
