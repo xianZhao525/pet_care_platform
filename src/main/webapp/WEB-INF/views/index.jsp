@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宠物领养平台 - 给流浪宠物一个温暖的家</title>
+    <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css"> --%>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
@@ -153,7 +154,7 @@
                 <!-- 这里显示静态示例数据，实际项目中应从后端获取 -->
                 <div class="pet-card fade-in-up">
                     <div class="pet-image-container">
-                        <img src="${pageContext.request.contextPath}/images/pets/dog1.jpg" alt="小白" class="pet-image" onerror="this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
+                        <img src="${pageContext.request.contextPath}/images/pets/dog1.jpg" alt="小白" class="pet-image" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
                     </div>
                     <div class="pet-info">
                         <h3 class="pet-name">小白</h3>
@@ -169,7 +170,7 @@
                 
                 <div class="pet-card fade-in-up">
                     <div class="pet-image-container">
-                        <img src="${pageContext.request.contextPath}/images/pets/cat1.jpg" alt="小花" class="pet-image" onerror="this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
+                        <img src="${pageContext.request.contextPath}/images/pets/cat1.jpg" alt="小花" class="pet-image" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
                     </div>
                     <div class="pet-info">
                         <h3 class="pet-name">小花</h3>
@@ -185,7 +186,7 @@
                 
                 <div class="pet-card fade-in-up">
                     <div class="pet-image-container">
-                        <img src="${pageContext.request.contextPath}/images/pets/dog2.jpg" alt="小黑" class="pet-image" onerror="this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
+                        <img src="${pageContext.request.contextPath}/images/pets/dog2.jpg" alt="小黑" class="pet-image" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
                     </div>
                     <div class="pet-info">
                         <h3 class="pet-name">小黑</h3>
@@ -201,7 +202,7 @@
                 
                 <div class="pet-card fade-in-up">
                     <div class="pet-image-container">
-                        <img src="${pageContext.request.contextPath}/images/pets/cat2.jpg" alt="咪咪" class="pet-image" onerror="this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
+                        <img src="${pageContext.request.contextPath}/images/pets/cat2.jpg" alt="咪咪" class="pet-image" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/pets/default.jpg'">
                     </div>
                     <div class="pet-info">
                         <h3 class="pet-name">咪咪</h3>

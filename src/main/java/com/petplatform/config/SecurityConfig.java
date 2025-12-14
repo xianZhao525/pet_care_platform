@@ -34,8 +34,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/static/**", "/user/register", "/user/login", "/", "/index").permitAll()
+                // 1. 先写所有特定路径（静态资源 + 公开页面）
+                .antMatchers("/css/**", "/js/**", "/images/**", "/static/**",
+                        "/user/register", "/user/login", "/", "/index")
+                .permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                // 2. 最后写 anyRequest（必须放在最后）
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
