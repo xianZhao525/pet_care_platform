@@ -6,215 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录 - 宠物领养平台</title>
     <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css"> --%>
-    <link rel="stylesheet" href="src\main\resources\static\css\style.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 400px);
-            padding: 60px 20px;
-        }
-        
-        .auth-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            width: 100%;
-            max-width: 450px;
-            padding: 50px 40px;
-        }
-        
-        .auth-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .auth-logo {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: block;
-        }
-        
-        .auth-title {
-            font-size: 1.8rem;
-            color: var(--dark-color);
-            margin-bottom: 10px;
-        }
-        
-        .auth-subtitle {
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e1e5eb;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(78, 151, 253, 0.1);
-        }
-        
-        .input-with-icon {
-            position: relative;
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-        
-        .input-with-icon .form-control {
-            padding-left: 45px;
-        }
-        
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-        }
-        
-        .remember-me input {
-            margin-right: 8px;
-        }
-        
-        .forgot-password {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .auth-btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 1.1rem;
-        }
-        
-        .auth-divider {
-            display: flex;
-            align-items: center;
-            margin: 30px 0;
-            color: var(--text-light);
-        }
-        
-        .auth-divider::before,
-        .auth-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background-color: #e1e5eb;
-        }
-        
-        .auth-divider span {
-            padding: 0 15px;
-        }
-        
-        .social-login {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .social-btn {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            border: 2px solid #e1e5eb;
-            background-color: white;
-            color: var(--dark-color);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .social-btn:hover {
-            border-color: var(--primary-color);
-            background-color: #f8fafd;
-        }
-        
-        .social-btn i {
-            margin-right: 8px;
-            font-size: 1.2rem;
-        }
-        
-        .social-btn.wechat i {
-            color: #09bb07;
-        }
-        
-        .social-btn.qq i {
-            color: #12b7f5;
-        }
-        
-        .auth-footer {
-            text-align: center;
-            margin-top: 30px;
-            color: var(--text-light);
-        }
-        
-        .auth-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .auth-link:hover {
-            text-decoration: underline;
-        }
-        
-        .error-message {
-            background-color: #ffebee;
-            color: #d32f2f;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .success-message {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-    </style>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -342,7 +136,7 @@
         </div>
     </footer>
 
-    <script>
+    <%-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
             const errorMessage = document.getElementById('errorMessage');
@@ -399,6 +193,6 @@
                 });
             });
         });
-    </script>
+    </script> --%>
 </body>
 </html>

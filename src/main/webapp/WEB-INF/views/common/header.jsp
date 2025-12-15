@@ -1,25 +1,41 @@
+<%-- header.jsp --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%
+    // 获取当前路径，用于高亮菜单
+    String currentPath = request.getRequestURI();
+    String contextPath = request.getContextPath();
+    String relativePath = currentPath.substring(contextPath.length());
+    
+    request.setAttribute("currentPath", relativePath);
+    request.setAttribute("ctx", contextPath);
+%>
+
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宠物领养平台</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    
+    <!-- 统一使用CDN资源 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${ctx}/css/style.css">
+    
+    <style>
+        :root {
+            --primary-color: #4e97fd;
+            --secondary-color: #ff7e5f;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-top: 80px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-paw"></i> 宠物领养平台
-            </a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">首页</a>
-                <a class="nav-link" href="/pet/list">宠物列表</a>
-                <a class="nav-link" href="/about">关于我们</a>
-                <a class="nav-link" href="/contact">联系我们</a>
-                <a class="nav-link" href="/login">登录</a>
-                <a class="nav-link" href="/register">注册</a>
-            </div>
-        </div>
-    </nav>

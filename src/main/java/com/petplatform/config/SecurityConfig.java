@@ -34,12 +34,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                // 1. 先写所有特定路径（静态资源 + 公开页面）
-                .antMatchers("/css/**", "/js/**", "/images/**", "/static/**",
-                        "/user/register", "/user/login", "/", "/index")
-                .permitAll()
+                // 1. 静态资源（必须放最前）
+                .antMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
+                // 2. 公开页面
+                .antMatchers("/user/register", "/user/login", "/", "/index").permitAll()
+                // 3. 管理员权限
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                // 2. 最后写 anyRequest（必须放在最后）
+
+                .antMatchers("/", "/index", "/pets", "/foster", "/donate", "/about", "/contact",
+                        "/user/login", "/user/register", "/css/**", "/js/**", "/images/**")
+                .permitAll()
+                // 4. 其他请求需要认证（必须最后）
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

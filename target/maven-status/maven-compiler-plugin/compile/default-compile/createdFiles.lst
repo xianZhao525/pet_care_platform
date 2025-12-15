@@ -31,6 +31,7 @@ com\petplatform\entity\Adoption.class
 com\petplatform\controller\DebugController.class
 com\petplatform\service\PetService.class
 com\petplatform\service\impl\AdoptionServiceImpl.class
+com\petplatform\PetCareApplication$WebConfig.class
 com\petplatform\entity\Pet$PetStatus.class
 com\petplatform\dao\PetRepository.class
 com\petplatform\config\DataInitializer.class
