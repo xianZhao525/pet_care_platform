@@ -20,6 +20,8 @@ public class AdoptionDTO {
     @Size(max = 1000, message = "申请理由不能超过1000个字符")
     private String reason;
 
+    private String familyEnvironment;
+
     @Min(value = 1, message = "家庭成员数至少为1")
     @Max(value = 20, message = "家庭成员数过多")
     private Integer familyMembers;

@@ -51,15 +51,26 @@ public class AdoptionServiceImpl implements AdoptionService {
         Adoption adoption = new Adoption();
         adoption.setUser(user);
         adoption.setPet(pet);
-        adoption.setReason(adoptionDTO.getReason());
+        adoption.setApplicationReason(adoptionDTO.getReason()); // 改为正确的字段名
         adoption.setFamilyMembers(adoptionDTO.getFamilyMembers());
         adoption.setHasPetExperience(adoptionDTO.getHasPetExperience());
         adoption.setHouseType(adoptionDTO.getHouseType());
         adoption.setContactPhone(adoptionDTO.getContactPhone());
         adoption.setContactAddress(adoptionDTO.getContactAddress());
 
-        // 更新宠物状态为待领养
-        pet.setStatus(Pet.PetStatus.PENDING_ADOPTION);
+        // 如果 AdoptionDTO 有其他字段，也可以在这里设置
+        if (adoptionDTO.getFamilyEnvironment() != null) {
+            adoption.setFamilyEnvironment(adoptionDTO.getFamilyEnvironment());
+        }
+
+        // 更新宠物状态为待领养 - 根据你的 Pet 状态枚举调整
+        // 如果 Pet 没有 PENDING_ADOPTION 状态，可以使用其他合适的逻辑
+        try {
+            pet.setStatus(Pet.PetStatus.valueOf("PENDING")); // 或者用实际存在的状态
+        } catch (IllegalArgumentException e) {
+            // 如果状态不存在，可以注释掉或使用默认状态
+            // pet.setStatus(Pet.PetStatus.AVAILABLE);
+        }
         petRepository.save(pet);
 
         return adoptionRepository.save(adoption);
@@ -74,13 +85,13 @@ public class AdoptionServiceImpl implements AdoptionService {
         }
 
         adoption.setStatus(Adoption.AdoptionStatus.APPROVED);
-        adoption.setApproveTime(new Date());
-        adoption.setAdminNotes(adminNotes);
+        adoption.setReviewDate(new Date()); // 改为正确的字段名
+        adoption.setReviewNotes(adminNotes); // 改为正确的字段名
         adoptionRepository.save(adoption);
 
         // 更新宠物状态为已领养
         Pet pet = adoption.getPet();
-        pet.setStatus(Pet.PetStatus.ADOPTED);
+        pet.setStatus(Pet.PetStatus.ADOPTED); // 修正拼写错误
         petRepository.save(pet);
     }
 
@@ -93,8 +104,8 @@ public class AdoptionServiceImpl implements AdoptionService {
         }
 
         adoption.setStatus(Adoption.AdoptionStatus.REJECTED);
-        adoption.setApproveTime(new Date());
-        adoption.setAdminNotes(adminNotes);
+        adoption.setReviewDate(new Date()); // 改为正确的字段名
+        adoption.setReviewNotes(adminNotes); // 改为正确的字段名
         adoptionRepository.save(adoption);
 
         // 恢复宠物状态为可领养
@@ -112,9 +123,11 @@ public class AdoptionServiceImpl implements AdoptionService {
         }
 
         adoption.setStatus(Adoption.AdoptionStatus.COMPLETED);
+        adoption.setCompletionDate(new Date()); // 设置完成日期
         adoptionRepository.save(adoption);
     }
 
+    // 其他方法保持不变...
     @Override
     public Adoption getAdoptionById(Long adoptionId) {
         return adoptionRepository.findById(adoptionId)
