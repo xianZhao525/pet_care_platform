@@ -11,18 +11,19 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.context.annotation.ComponentScan;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
+// 显式指定扫描 Controller 所在包（最关键）
+@ComponentScan(basePackages = { "com.petplatform.controller.spring", "com.petplatform.service", "com.petplatform.dao" })
+@ServletComponentScan("com.petplatform")
+
+// @SpringBootApplication
 public class PetCareApplication extends SpringBootServletInitializer {
-
-    public static void main(String[] args) {
-        SpringApplication.run(PetCareApplication.class, args);
-        System.out.println("========================================");
-        System.out.println("✅ 应用启动完成！");
-        System.out.println("✅ 访问地址: http://localhost:8080");
-        System.out.println("========================================");
-    }
-
     /**
      * 配置1：告诉嵌入式 Tomcat src/main/webapp 是 Web 资源目录
      * 解决：Could not resolve view with name 'index' 问题
@@ -60,5 +61,13 @@ public class PetCareApplication extends SpringBootServletInitializer {
             registry.addResourceHandler("/**")
                     .addResourceLocations("file:src/main/webapp/");
         }
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(PetCareApplication.class, args);
+        System.out.println("========================================");
+        System.out.println("✅ 应用启动完成！");
+        System.out.println("✅ 访问地址: http://localhost:8080");
+        System.out.println("========================================");
     }
 }

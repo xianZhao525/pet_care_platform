@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,7 +36,11 @@ public class FosterController {
     private UserService userService;
 
     // 寄养需求列表
-    @GetMapping("/list")
+    @GetMapping("/foster/list")
+    public String fosterList() {
+        return "foster/list"; // 直接返回正确的JSP路径
+    }
+
     public String listFosters(@RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(required = false) String city,

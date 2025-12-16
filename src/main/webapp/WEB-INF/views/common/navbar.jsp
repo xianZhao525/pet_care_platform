@@ -1,7 +1,13 @@
 <%-- navbar.jsp --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
 
+<%-- 计算当前请求路径 --%>
+<c:set var="currentPath" value="${pageContext.request.servletPath}"/>
+
+<%-- 调试信息（可选） --%>
+<%-- 当前路径: ${currentPath} --%>
 <style>
     .navbar {
         background-color: white;
@@ -85,26 +91,25 @@
 
 <nav class="navbar">
     <div class="container navbar-container">
-        <a href="${ctx}/" class="logo">
+        <a href="${pageContext.request.contextPath}/" class="logo">
             <i class="fas fa-paw"></i> 宠物领养平台
         </a>
         <ul class="nav-links">
-            <!-- 使用 == 替代 .equals() -->
-            <li><a href="${ctx}/" class="${currentPath == '/' || currentPath == '/index.jsp' ? 'active' : ''}">首页</a></li>
-            <li><a href="${ctx}/pet/list" class="${currentPath.startsWith('/pet') ? 'active' : ''}">领养宠物</a></li>
-            <li><a href="${ctx}/foster" class="${currentPath == '/foster' ? 'active' : ''}">临时寄养</a></li>
-            <li><a href="${ctx}/donate" class="${currentPath == '/donate' ? 'active' : ''}">爱心捐赠</a></li>
-            <li><a href="${ctx}/about" class="${currentPath == '/about' ? 'active' : ''}">关于我们</a></li>
+            <li><a href="${pageContext.request.contextPath}/" class="${currentPath == '/' || currentPath == '/index.jsp' ? 'active' : ''}">首页</a></li>
+            <li><a href="${pageContext.request.contextPath}/pet/list" class="${currentPath.startsWith('/pet') ? 'active' : ''}">领养宠物</a></li>
+            <li><a href="${pageContext.request.contextPath}/foster/list" class="${currentPath.startsWith('/foster') ? 'active' : ''}">临时寄养</a></li>
+            <li><a href="${pageContext.request.contextPath}/donation/list" class="${currentPath.startsWith('/donation') ? 'active' : ''}">爱心捐赠</a></li>
+            <li><a href="${pageContext.request.contextPath}/about" class="${currentPath == '/about' ? 'active' : ''}">关于我们</a></li>
         </ul>
         <div class="auth-buttons">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <span class="btn btn-outline">欢迎，${sessionScope.user.username}</span>
-                    <a href="${ctx}/logout" class="btn btn-primary">退出</a>
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">退出</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="${ctx}/login" class="btn btn-outline">登录</a>
-                    <a href="${ctx}/register" class="btn btn-primary">注册</a>
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline">登录</a>
+                    <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">注册</a>
                 </c:otherwise>
             </c:choose>
         </div>

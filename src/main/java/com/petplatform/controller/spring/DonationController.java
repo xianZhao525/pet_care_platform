@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import org.springframework.stereotype.Controller;
+
 @Controller
 @RequestMapping("/donation")
 public class DonationController {
@@ -32,7 +34,11 @@ public class DonationController {
     private UserService userService;
 
     // 捐赠项目列表
-    @GetMapping("/list")
+    @GetMapping("/donation/list")
+    public String donationList() {
+        return "donation/list"; // 直接返回正确的JSP路径
+    }
+
     public String listDonations(@RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(required = false) String keyword,

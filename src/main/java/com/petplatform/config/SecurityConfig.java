@@ -9,11 +9,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-    @Bean
+@Configuration // 必须存在
+@EnableWebSecurity // 必须存在
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean // 必须添加此注解
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -30,35 +36,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("USER");
     }
 
+    // ... 保持原有代码 ...
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                // 1. 静态资源（必须放最前）
-                .antMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
+                // 1. 静态资源
+                .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 // 2. 公开页面
-                .antMatchers("/user/register", "/user/login", "/", "/index").permitAll()
-                // 3. 管理员权限
-                .antMatchers("/admin/**").hasRole("ADMIN")
-
-                .antMatchers("/", "/index", "/pets", "/foster", "/donate", "/about", "/contact",
-                        "/user/login", "/user/register", "/css/**", "/js/**", "/images/**")
+                .antMatchers("/", "/index", "/pet/**", "/foster/**", "/donation/**",
+                        "/user/login", "/user/register", "/test", "/debug/**")
                 .permitAll()
-                // 4. 其他请求需要认证（必须最后）
+                // 3. 其他需要认证
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/user/login")
-                .loginProcessingUrl("/user/login")
-                .defaultSuccessUrl("/")
                 .permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/user/logout")
-                .logoutSuccessUrl("/")
-                .permitAll()
-                .and()
-                .csrf().disable()
-                .headers().frameOptions().sameOrigin();
+                .permitAll();
     }
 }

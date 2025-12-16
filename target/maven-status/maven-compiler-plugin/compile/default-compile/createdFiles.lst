@@ -18,6 +18,7 @@ com\petplatform\service\AdoptionService.class
 com\petplatform\controller\spring\AdoptionController.class
 com\petplatform\controller\spring\DonationController.class
 com\petplatform\controller\spring\AdminController.class
+com\petplatform\controller\spring\TestController.class
 com\petplatform\util\PasswordUtil.class
 com\petplatform\dto\AdoptionDTO.class
 com\petplatform\dto\PetDTO.class
