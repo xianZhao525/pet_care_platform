@@ -38,4 +38,7 @@ public interface AdoptionService {
 
     // 获取领养申请总数（新增）
     long getAdoptionCount();
+
+    // Adoption getAdoptionById(Long id); // 添加这个方法
+    // void completeAdoption(Long id); // 添加这个方法
 }

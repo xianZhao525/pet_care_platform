@@ -21,9 +21,10 @@ public class Foster {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // 在 Foster 类中定义 PetType 枚举
     @Column(name = "pet_type")
     @Enumerated(EnumType.STRING)
-    private Pet.PetType petType;
+    private PetType petType; // 使用 Foster 内部的 PetType
 
     @Column(name = "pet_name", length = 100)
     private String petName;
@@ -33,7 +34,7 @@ public class Foster {
 
     @Column(name = "pet_gender")
     @Enumerated(EnumType.STRING)
-    private Pet.Gender petGender;
+    private Gender petGender; // 使用 Foster 内部的 Gender
 
     @Column(name = "pet_breed", length = 100)
     private String petBreed;
@@ -99,12 +100,30 @@ public class Foster {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    // Foster 状态枚举
     public enum FosterStatus {
         PENDING, // 待寄养
         MATCHED, // 已匹配
         IN_PROGRESS, // 寄养中
         COMPLETED, // 已完成
         CANCELED // 已取消
+    }
+
+    // Pet 类型枚举（在 Foster 类内部定义）
+    public enum PetType {
+        DOG, // 狗
+        CAT, // 猫
+        BIRD, // 鸟
+        RABBIT, // 兔子
+        HAMSTER, // 仓鼠
+        OTHER // 其他
+    }
+
+    // 性别枚举（在 Foster 类内部定义）
+    public enum Gender {
+        MALE, // 雄性
+        FEMALE, // 雌性
+        UNKNOWN // 未知
     }
 
     // Constructors
@@ -147,11 +166,11 @@ public class Foster {
         this.user = user;
     }
 
-    public Pet.PetType getPetType() {
+    public PetType getPetType() {
         return petType;
     }
 
-    public void setPetType(Pet.PetType petType) {
+    public void setPetType(PetType petType) {
         this.petType = petType;
     }
 
@@ -171,11 +190,11 @@ public class Foster {
         this.petAge = petAge;
     }
 
-    public Pet.Gender getPetGender() {
+    public Gender getPetGender() {
         return petGender;
     }
 
-    public void setPetGender(Pet.Gender petGender) {
+    public void setPetGender(Gender petGender) {
         this.petGender = petGender;
     }
 

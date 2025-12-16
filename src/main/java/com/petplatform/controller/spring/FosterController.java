@@ -230,8 +230,12 @@ public class FosterController {
     }
 
     // 编辑寄养需求页面
+    // 编辑寄养需求页面
     @GetMapping("/edit/{id}")
-    public String editFosterPage(@PathVariable Long id, Model model, HttpSession session) {
+    public String editFosterPage(@PathVariable Long id,
+            Model model,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) { // 添加 redirectAttributes 参数
         try {
             User user = (User) session.getAttribute("user");
             if (user == null) {

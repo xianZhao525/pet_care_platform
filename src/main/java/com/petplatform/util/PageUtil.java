@@ -92,4 +92,20 @@ public class PageUtil {
             throw new IllegalArgumentException("每页大小必须在1-100之间");
         }
     }
+
+    public static Map<String, Object> getPageInfo(Page<?> page) {
+        Map<String, Object> pageInfo = new HashMap<>();
+
+        pageInfo.put("currentPage", page.getNumber() + 1); // 当前页（从1开始）
+        pageInfo.put("totalPages", page.getTotalPages()); // 总页数
+        pageInfo.put("totalElements", page.getTotalElements()); // 总记录数
+        pageInfo.put("pageSize", page.getSize()); // 每页大小
+        pageInfo.put("isFirst", page.isFirst()); // 是否第一页
+        pageInfo.put("isLast", page.isLast()); // 是否最后一页
+        pageInfo.put("hasNext", page.hasNext()); // 是否有下一页
+        pageInfo.put("hasPrevious", page.hasPrevious()); // 是否有上一页
+        pageInfo.put("numberOfElements", page.getNumberOfElements()); // 当前页记录数
+
+        return pageInfo;
+    }
 }

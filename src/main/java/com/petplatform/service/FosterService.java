@@ -24,7 +24,7 @@ public interface FosterService {
     Page<Foster> getAllFosters(int page, int size);
 
     // 根据条件搜索寄养需求
-    Page<Foster> searchFosters(String city, Foster.PetType petType, Date startDate,
+    Page<Foster> searchFosters(String city, Foster.PetType petType, Date startDate, // 使用 Foster.PetType
             Date endDate, Double maxFee, int page, int size);
 
     // 获取用户发布的寄养需求

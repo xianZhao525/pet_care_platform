@@ -32,7 +32,6 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
         @Query("SELECT COUNT(a) FROM Adoption a WHERE a.status = 'PENDING'")
         Long countPendingAdoptions();
 
-        @Query("SELECT a FROM Adoption a WHERE a.applyTime BETWEEN :startDate AND :endDate")
-        List<Adoption> findAdoptionsByDateRange(@Param("startDate") Date startDate,
-                        @Param("endDate") Date endDate);
+        @Query("SELECT a FROM Adoption a WHERE a.applicationDate BETWEEN :startDate AND :endDate")
+        List<Adoption> findAdoptionsByDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

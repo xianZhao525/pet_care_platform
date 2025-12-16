@@ -28,7 +28,7 @@ public interface FosterRepository extends JpaRepository<Foster, Long> {
                         "(:maxFee IS NULL OR f.dailyFee <= :maxFee) AND " +
                         "f.status = 'PENDING'")
         Page<Foster> searchFosters(@Param("city") String city,
-                        @Param("petType") Foster.PetType petType,
+                        @Param("petType") Foster.PetType petType, // 使用 Foster.PetType
                         @Param("startDate") Date startDate,
                         @Param("endDate") Date endDate,
                         @Param("maxFee") Double maxFee,
