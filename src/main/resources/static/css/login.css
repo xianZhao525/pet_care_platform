@@ -203,3 +203,88 @@
     margin-bottom: 20px;
     display: none;
 }
+
+/* 错误消息样式 */
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.error-message[style*="display: block"] {
+    display: block !important;
+}
+
+/* 成功消息样式 */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.success-message[style*="display: block"] {
+    display: block !important;
+}
+
+/* 错误文本 */
+.error-text {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* 必填标记 */
+.required {
+    color: #dc3545;
+    margin-left: 3px;
+}
+
+/* 密码强度条 */
+.password-strength {
+    height: 5px;
+    background: #e9ecef;
+    border-radius: 3px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    background: #dc3545;
+    transition: all 0.3s ease;
+}
+
+.password-strength-text {
+    font-size: 0.875rem;
+    margin: 5px 0;
+}
+
+/* 密码要求 */
+.password-requirements {
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+.requirement {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.requirement.valid {
+    color: #28a745;
+}
+
+.requirement.invalid {
+    color: #6c757d;
+}

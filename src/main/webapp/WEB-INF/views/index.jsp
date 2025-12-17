@@ -20,8 +20,8 @@
     
     .loading-spinner { display: none; text-align: center; padding: 40px; }
     .spinner {
-        border: 5px solid #f3f3f3;
-        border-top: 5px solid #4e97fd;
+        border: 5px solid #3192e2ff;
+        border-top: 5px solid #1e4172ff;
         border-radius: 50%;
         width: 50px;
         height: 50px;

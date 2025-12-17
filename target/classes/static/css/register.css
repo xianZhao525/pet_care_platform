@@ -191,3 +191,127 @@
 .requirement.invalid {
     color: var(--text-light);
 }
+
+/* 错误消息样式 */
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.error-message[style*="display: block"] {
+    display: block !important;
+}
+
+/* 成功消息样式 */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.success-message[style*="display: block"] {
+    display: block !important;
+}
+
+/* 错误文本 */
+.error-text {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* 必填标记 */
+.required {
+    color: #dc3545;
+    margin-left: 3px;
+}
+
+/* 密码强度条 */
+.password-strength {
+    height: 5px;
+    background: #e9ecef;
+    border-radius: 3px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    background: #dc3545;
+    transition: all 0.3s ease;
+}
+
+.password-strength-text {
+    font-size: 0.875rem;
+    margin: 5px 0;
+}
+
+/* 密码要求 */
+.password-requirements {
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+.requirement {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.requirement.valid {
+    color: #28a745;
+}
+
+.requirement.invalid {
+    color: #6c757d;
+}
+
+.role-selection {
+    display: flex;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.role-option:hover {
+    border-color: var(--primary-color);
+    background: #f0f7ff;
+}
+
+.role-option input[type="radio"] {
+    margin: 0;
+}
+
+.role-option span {
+    font-weight: 500;
+}
+
+.role-option input[type="radio"]:checked+span {
+    color: var(--primary-color);
+}
+
+.role-option input[type="radio"]:checked~* {
+    border-color: var(--primary-color);
+}

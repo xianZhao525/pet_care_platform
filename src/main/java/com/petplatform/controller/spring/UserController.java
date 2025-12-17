@@ -1,6 +1,5 @@
 package com.petplatform.controller.spring;
 
-import com.petplatform.dto.ApiResponse;
 import com.petplatform.dto.LoginDTO;
 import com.petplatform.dto.UserDTO;
 import com.petplatform.entity.User;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -24,7 +23,10 @@ public class UserController {
 
     // 显示注册页面
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(Model model, HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            return "redirect:/";
+        }
         model.addAttribute("userDTO", new UserDTO());
         return "user/register";
     }
@@ -33,55 +35,89 @@ public class UserController {
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
             BindingResult result,
-            Model model) {
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
+        System.out.println("🎯 DEBUG: 注册请求到达 - 用户名: " + userDTO.getUsername());
+
+        if (session.getAttribute("user") != null) {
+            return "redirect:/";
+        }
+
         if (result.hasErrors()) {
+            System.out.println("🎯 DEBUG: 表单验证失败");
             return "user/register";
         }
 
         try {
+            // 检查用户名是否已存在
+            if (userService.findByUsername(userDTO.getUsername()).isPresent()) {
+                System.out.println("🎯 DEBUG: 用户名已存在");
+                redirectAttributes.addFlashAttribute("error", "用户名已存在，请使用其他用户名");
+                return "redirect:/user/register";
+            }
+
+            // 注册用户
             User user = userService.registerUser(userDTO);
-            model.addAttribute("success", "注册成功，请登录");
-            return "user/login";
+            System.out.println("✅ 注册成功 - 用户ID: " + user.getId() + ", 用户名: " + user.getUsername());
+
+            // 注册成功，显示成功消息并重定向到登录页
+            redirectAttributes.addFlashAttribute("registered", true);
+            return "redirect:/user/login";
+
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "user/register";
+            System.err.println("❌ 注册失败: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "注册失败: " + e.getMessage());
+            return "redirect:/user/register";
         }
     }
 
     // 显示登录页面
-    @GetMapping("/login") // 对应 /user/login
-    public String loginPage() {
+    @GetMapping("/login")
+    public String loginPage(Model model, HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("loginDTO", new LoginDTO());
         return "user/login";
     }
-
-    // @GetMapping("/login")
-    // public String showLoginForm(Model model) {
-    // model.addAttribute("loginDTO", new LoginDTO());
-    // return "user/login";
-    // }
 
     // 处理登录请求
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("loginDTO") LoginDTO loginDTO,
             BindingResult result,
             HttpSession session,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
+        System.out.println("🎯 DEBUG: 登录请求到达 - 用户名: " + loginDTO.getUsername());
+
+        if (session.getAttribute("user") != null) {
+            return "redirect:/";
+        }
+
         if (result.hasErrors()) {
-            return "user/login";
+            System.out.println("🎯 DEBUG: 表单验证失败");
+            redirectAttributes.addFlashAttribute("loginError", true);
+            redirectAttributes.addFlashAttribute("errorMessage", "请输入完整的登录信息");
+            return "redirect:/user/login";
         }
 
         try {
             User user = userService.login(loginDTO.getUsername(), loginDTO.getPassword())
-                    .orElseThrow(() -> new Exception("用户名或密码错误"));
+                    .orElseThrow(() -> new RuntimeException("用户名或密码错误"));
+
+            System.out.println("✅ 登录成功 - 用户ID: " + user.getId());
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("username", user.getUsername());
 
-            // 重定向到首页
             return "redirect:/";
+
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "user/login";
+            System.err.println("❌ 登录失败: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("loginError", true);
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/user/login";
         }
     }
 
@@ -89,7 +125,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/user/login";
     }
 
     // 显示个人资料页面
@@ -102,63 +138,12 @@ public class UserController {
 
         try {
             User user = userService.getUserById(userId)
-                    .orElseThrow(() -> new Exception("用户不存在"));
+                    .orElseThrow(() -> new RuntimeException("用户不存在"));
             model.addAttribute("user", user);
             return "user/profile";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             return "redirect:/";
-        }
-    }
-
-    // 更新个人资料
-    @PostMapping("/profile/update")
-    public String updateProfile(@Valid @ModelAttribute UserDTO userDTO,
-            BindingResult result,
-            HttpSession session,
-            Model model) {
-        if (result.hasErrors()) {
-            return "user/profile";
-        }
-
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return "redirect:/user/login";
-        }
-
-        try {
-            User updatedUser = userService.updateUser(userId, userDTO);
-            session.setAttribute("user", updatedUser);
-            model.addAttribute("success", "资料更新成功");
-            return "user/profile";
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "user/profile";
-        }
-    }
-
-    // REST API: 获取用户信息
-    @GetMapping("/api/{id}")
-    @ResponseBody
-    public ApiResponse<User> getUserById(@PathVariable Long id) {
-        try {
-            User user = userService.getUserById(id)
-                    .orElseThrow(() -> new RuntimeException("用户不存在"));
-            return ApiResponse.success(user);
-        } catch (Exception e) {
-            return ApiResponse.error(e.getMessage());
-        }
-    }
-
-    // REST API: 搜索用户
-    @GetMapping("/api/search")
-    @ResponseBody
-    public ApiResponse<List<User>> searchUsers(@RequestParam String keyword) {
-        try {
-            List<User> users = userService.searchUsers(keyword);
-            return ApiResponse.success(users);
-        } catch (Exception e) {
-            return ApiResponse.error(e.getMessage());
         }
     }
 }

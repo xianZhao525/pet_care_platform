@@ -103,8 +103,16 @@
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <span class="btn btn-outline">欢迎，${sessionScope.user.username}</span>
-                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">退出</a>
+                    <%-- ✅ 管理员显示后台入口 --%>
+                    <c:if test="${sessionScope.user.role == 'ADMIN'}">
+                        <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn btn-primary">
+                            <i class="fas fa-cog"></i> 管理后台
+                        </a>
+                    </c:if>
+                    
+                    <a href="${pageContext.request.contextPath}/user/logout" class="btn btn-primary">退出</a>
                 </c:when>
+
                 <c:otherwise>
                     <a href="${pageContext.request.contextPath}/user/login" class="btn btn-outline">登录</a>
                     <a href="${pageContext.request.contextPath}/user/register" class="btn btn-primary">注册</a>

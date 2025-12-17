@@ -1,83 +1,81 @@
 package com.petplatform.service.impl;
 
-import com.petplatform.dao.UserRepository;
-import com.petplatform.entity.User;
 import com.petplatform.dto.UserDTO;
+import com.petplatform.entity.User;
+import com.petplatform.dao.UserRepository;
 import com.petplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails; // ✅ 添加导入
+import org.springframework.security.core.userdetails.UsernameNotFoundException; // ✅ 添加导入
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
-    // 关键：使用构造函数注入，这是最可靠的方式
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        System.out.println("======= UserServiceImpl 创建完成，PasswordEncoder已注入 =======");
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value("${app.admin.registration.code:DEFAULT_ADMIN_2025}")
+    private String adminRegistrationCode;
 
     @Override
-    public User register(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+    public User registerUser(UserDTO userDTO) {
+        System.out.println("🎯 开始注册用户: " + userDTO.getUsername() + ", 角色: " + userDTO.getRole());
+
+        // 检查用户名是否已存在
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
             throw new RuntimeException("用户名已存在");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("邮箱已被注册");
+
+        // ✅ 角色验证和转换
+        User.UserRole role = User.UserRole.USER; // 默认普通用户
+        if ("ADMIN".equals(userDTO.getRole())) {
+            // 验证管理员注册码
+            if (userDTO.getAdminCode() == null || !userDTO.getAdminCode().equals(adminRegistrationCode)) {
+                System.out.println("❌ 管理员注册码错误: " + userDTO.getAdminCode());
+                throw new RuntimeException("管理员注册码错误，无法注册管理员账户");
+            }
+            role = User.UserRole.ADMIN;
+            System.out.println("✅ 管理员注册码验证通过");
         }
 
-        // 加密密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        // 创建新用户
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPhone(userDTO.getPhone());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRole(role); // ✅ 设置角色
+
+        User savedUser = userRepository.save(user);
+        System.out.println("✅ 用户注册成功 - ID: " + savedUser.getId() + ", 角色: " + savedUser.getRole());
+
+        return savedUser;
     }
 
     @Override
     public Optional<User> login(String username, String password) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return Optional.of(user);
-            }
-        }
-        return Optional.empty();
+        return userRepository.findByUsername(username)
+                .map(user -> {
+                    boolean matches = passwordEncoder.matches(password, user.getPassword());
+                    return matches ? user : null;
+                });
     }
 
     @Override
-    public User updateProfile(Long userId, User updatedUser) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
-
-        user.setEmail(updatedUser.getEmail());
-        user.setPhone(updatedUser.getPhone());
-        user.setAddress(updatedUser.getAddress());
-        user.setAvatar(updatedUser.getAvatar());
-
-        return userRepository.save(user);
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -86,14 +84,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
+    public User updateUser(Long userId, UserDTO userDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("用户不存在"));
 
-    // 新增方法：用于AdminController
-    @Override
-    public long getUserCount() {
-        return userRepository.count();
+        user.setPhone(userDTO.getPhone());
+        user.setEmail(userDTO.getEmail());
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+        return userRepository.save(user);
     }
 
     @Override
@@ -103,72 +104,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUsers(String keyword) {
-        // 修复：使用 collect(Collectors.toList()) 而不是 .toList()
-        List<User> allUsers = userRepository.findAll();
-        return allUsers.stream()
-                .filter(user -> user.getUsername().toLowerCase().contains(keyword.toLowerCase()) ||
-                        (user.getEmail() != null && user.getEmail().toLowerCase().contains(keyword.toLowerCase())) ||
-                        (user.getPhone() != null && user.getPhone().contains(keyword)))
-                .collect(Collectors.toList());
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return userRepository.findAll();
+        }
+        return userRepository.findByUsernameContainingOrEmailContaining(keyword, keyword);
     }
 
     @Override
-    public User registerUser(UserDTO userDTO) {
-        // 检查用户名和邮箱是否已存在
-        if (userRepository.existsByUsername(userDTO.getUsername())) {
-            throw new RuntimeException("用户名已存在");
-        }
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new RuntimeException("邮箱已被注册");
-        }
-
-        // 创建User对象
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 加密密码
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-        user.setAddress(userDTO.getAddress());
-
-        // 如果有头像URL，设置头像
-        if (userDTO.getAvatarUrl() != null && !userDTO.getAvatarUrl().isEmpty()) {
-            user.setAvatar(userDTO.getAvatarUrl());
-        }
-
-        return userRepository.save(user);
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     @Override
-    public User updateUser(Long userId, UserDTO userDTO) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+    public long getUserCount() {
+        return userRepository.count();
+    }
 
-        // 更新邮箱（如果提供了新邮箱且与旧邮箱不同）
-        if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()
-                && !userDTO.getEmail().equals(user.getEmail())) {
-            // 检查新邮箱是否已被其他用户使用
-            if (userRepository.existsByEmailAndIdNot(userDTO.getEmail(), userId)) {
-                throw new RuntimeException("邮箱已被其他用户使用");
-            }
-            user.setEmail(userDTO.getEmail());
-        }
-
-        // 更新其他字段
-        if (userDTO.getPhone() != null) {
-            user.setPhone(userDTO.getPhone());
-        }
-        if (userDTO.getAddress() != null) {
-            user.setAddress(userDTO.getAddress());
-        }
-        if (userDTO.getAvatarUrl() != null && !userDTO.getAvatarUrl().isEmpty()) {
-            user.setAvatar(userDTO.getAvatarUrl());
-        }
-
-        // 如果需要更新密码
-        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        }
-
-        return userRepository.save(user);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .map(user -> org.springframework.security.core.userdetails.User
+                        .withUsername(user.getUsername())
+                        .password(user.getPassword())
+                        .roles(user.getRole().name())
+                        .build())
+                .orElseThrow(() -> new UsernameNotFoundException("用户不存在: " + username));
     }
 }

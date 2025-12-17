@@ -12,14 +12,18 @@ import java.util.List; // 添加这行
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByPhone(String phone);
+
     Optional<User> findByEmail(String email);
+
+    List<User> findByUsernameContainingOrEmailContaining(String username, String email);
 
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
     boolean existsByEmailAndIdNot(String email, Long id);
 
     // 分页查询（继承自JpaRepository，已存在）
