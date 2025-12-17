@@ -23,9 +23,9 @@
                 <div class="col-md-4">
                     <h5>联系我们</h5>
                     <p class="text-muted">
-                        <i class="fas fa-phone me-2"></i> 400-123-4567<br>
+                        <i class="fas fa-phone me-2"></i> 每一个毛孩子都想要一个可以遮风挡雨的家<br>
                         <i class="fas fa-envelope me-2"></i> contact@petadoption.com<br>
-                        <i class="fas fa-map-marker-alt me-2"></i> 北京市朝阳区宠物救助中心
+                        <i class="fas fa-map-marker-alt me-2"></i> 用领养代替购买，用爱心代替抛弃
                     </p>
                 </div>
             </div>

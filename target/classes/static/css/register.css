@@ -315,3 +315,43 @@
 .role-option input[type="radio"]:checked~* {
     border-color: var(--primary-color);
 }
+
+
+/* 实时错误提示样式 */
+.error-text {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: none;
+    padding: 5px 10px;
+    background-color: #fee;
+    border-radius: 4px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-text.show {
+    display: block !important;
+}
+
+/* 输入框错误状态 */
+.form-control.error {
+    border-color: #e74c3c;
+    background-color: #fee;
+}
+
+.form-control.success {
+    border-color: #27ae60;
+    background-color: #f0fff4;
+}

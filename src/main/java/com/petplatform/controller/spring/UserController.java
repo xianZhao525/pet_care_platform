@@ -49,9 +49,14 @@ public class UserController {
             return "redirect:/";
         }
 
+        // ✅ 如果有表单验证错误，返回注册页并显示错误
         if (result.hasErrors()) {
-            System.out.println("❌ 表单验证失败: " + result.getAllErrors());
-            return "user/register";
+            StringBuilder errorMsg = new StringBuilder();
+            result.getAllErrors().forEach(error -> {
+                errorMsg.append(error.getDefaultMessage()).append("\n");
+            });
+            redirectAttributes.addFlashAttribute("error", errorMsg.toString());
+            return "redirect:/user/register";
         }
 
         try {

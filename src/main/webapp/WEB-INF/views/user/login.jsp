@@ -129,7 +129,7 @@
     </div>
 
     <%-- 引入公共页脚 --%>
-    <%@ include file="../common/footer.jsp" %>
+    <%-- <%@ include file="../common/footer.jsp" %> --%>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
