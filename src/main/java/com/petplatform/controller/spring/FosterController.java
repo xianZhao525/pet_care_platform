@@ -5,6 +5,7 @@ import com.petplatform.entity.User;
 import com.petplatform.service.FosterService;
 import com.petplatform.service.UserService;
 import com.petplatform.util.PageUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
@@ -36,7 +35,7 @@ public class FosterController {
     private UserService userService;
 
     // 寄养需求列表
-    @GetMapping("/foster/list")
+    @GetMapping("/list")
     public String fosterList() {
         return "foster/list"; // 直接返回正确的JSP路径
     }

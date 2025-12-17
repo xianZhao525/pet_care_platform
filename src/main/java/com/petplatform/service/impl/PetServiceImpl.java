@@ -53,4 +53,9 @@ public class PetServiceImpl implements PetService {
             return List.of();
         }
     }
+
+    @Override
+    public long countByStatus(Pet.PetStatus status) {
+        return petRepository.countByStatus(status);
+    }
 }

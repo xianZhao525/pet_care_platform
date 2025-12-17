@@ -34,10 +34,10 @@ public class DonationController {
     private UserService userService;
 
     // 捐赠项目列表
-    @GetMapping("/donation/list")
-    public String donationList() {
-        return "donation/list"; // 直接返回正确的JSP路径
-    }
+    @GetMapping("/list") // 对应 /donation/list
+    // public String donationList(Model model) {
+    // return "donation/list"; // 对应 /views/donation/list.jsp
+    // }
 
     public String listDonations(@RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "12") int size,

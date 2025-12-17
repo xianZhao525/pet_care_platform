@@ -6,8 +6,6 @@
 <%-- 计算当前请求路径 --%>
 <c:set var="currentPath" value="${pageContext.request.servletPath}"/>
 
-<%-- 调试信息（可选） --%>
-<%-- 当前路径: ${currentPath} --%>
 <style>
     .navbar {
         background-color: white;
@@ -95,7 +93,7 @@
             <i class="fas fa-paw"></i> 宠物领养平台
         </a>
         <ul class="nav-links">
-            <li><a href="${pageContext.request.contextPath}/" class="${currentPath == '/' || currentPath == '/index.jsp' ? 'active' : ''}">首页</a></li>
+            <li><a href="${pageContext.request.contextPath}/" class="${currentPath == '/' || currentPath == '/index' ? 'active' : ''}">首页</a></li>
             <li><a href="${pageContext.request.contextPath}/pet/list" class="${currentPath.startsWith('/pet') ? 'active' : ''}">领养宠物</a></li>
             <li><a href="${pageContext.request.contextPath}/foster/list" class="${currentPath.startsWith('/foster') ? 'active' : ''}">临时寄养</a></li>
             <li><a href="${pageContext.request.contextPath}/donation/list" class="${currentPath.startsWith('/donation') ? 'active' : ''}">爱心捐赠</a></li>
@@ -108,8 +106,8 @@
                     <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">退出</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline">登录</a>
-                    <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">注册</a>
+                    <a href="${pageContext.request.contextPath}/user/login" class="btn btn-outline">登录</a>
+                    <a href="${pageContext.request.contextPath}/user/register" class="btn btn-primary">注册</a>
                 </c:otherwise>
             </c:choose>
         </div>

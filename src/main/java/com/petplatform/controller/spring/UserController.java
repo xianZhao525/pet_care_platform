@@ -49,11 +49,16 @@ public class UserController {
     }
 
     // 显示登录页面
-    @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("loginDTO", new LoginDTO());
+    @GetMapping("/login") // 对应 /user/login
+    public String loginPage() {
         return "user/login";
     }
+
+    // @GetMapping("/login")
+    // public String showLoginForm(Model model) {
+    // model.addAttribute("loginDTO", new LoginDTO());
+    // return "user/login";
+    // }
 
     // 处理登录请求
     @PostMapping("/login")
@@ -71,7 +76,7 @@ public class UserController {
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("username", user.getUsername());
-            
+
             // 重定向到首页
             return "redirect:/";
         } catch (Exception e) {

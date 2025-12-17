@@ -4,9 +4,9 @@ import com.petplatform.dao.PetRepository;
 import com.petplatform.dao.UserRepository;
 import com.petplatform.entity.Pet;
 import com.petplatform.entity.User;
-import com.petplatform.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder; // 导入正确的类
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,13 +18,16 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PetRepository petRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder; // 注入 Spring 的 PasswordEncoder
+
     @Override
     public void run(String... args) {
         // 初始化管理员用户
         if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword(PasswordUtil.encode("admin123"));
+            admin.setPassword(passwordEncoder.encode("admin123")); // 使用注入的 PasswordEncoder
             admin.setEmail("admin@petplatform.com");
             admin.setPhone("13800138000");
             admin.setRole(User.UserRole.ADMIN);
@@ -33,7 +36,7 @@ public class DataInitializer implements CommandLineRunner {
             // 初始化普通用户
             User user1 = new User();
             user1.setUsername("user1");
-            user1.setPassword(PasswordUtil.encode("user123"));
+            user1.setPassword(passwordEncoder.encode("user123"));
             user1.setEmail("user1@example.com");
             user1.setPhone("13900139000");
             userRepository.save(user1);

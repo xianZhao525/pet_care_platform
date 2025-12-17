@@ -15,15 +15,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // 关键：使用构造函数注入，这是最可靠的方式
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        System.out.println("======= UserServiceImpl 创建完成，PasswordEncoder已注入 =======");
+    }
 
     @Override
     public User register(User user) {
@@ -115,7 +121,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new RuntimeException("邮箱已被注册");
         }
-        
+
         // 创建User对象
         User user = new User();
         user.setUsername(userDTO.getUsername());
@@ -123,12 +129,12 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
         user.setAddress(userDTO.getAddress());
-        
+
         // 如果有头像URL，设置头像
         if (userDTO.getAvatarUrl() != null && !userDTO.getAvatarUrl().isEmpty()) {
             user.setAvatar(userDTO.getAvatarUrl());
         }
-        
+
         return userRepository.save(user);
     }
 
@@ -136,9 +142,9 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long userId, UserDTO userDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
-        
+
         // 更新邮箱（如果提供了新邮箱且与旧邮箱不同）
-        if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty() 
+        if (userDTO.getEmail() != null && !userDTO.getEmail().isEmpty()
                 && !userDTO.getEmail().equals(user.getEmail())) {
             // 检查新邮箱是否已被其他用户使用
             if (userRepository.existsByEmailAndIdNot(userDTO.getEmail(), userId)) {
@@ -146,7 +152,7 @@ public class UserServiceImpl implements UserService {
             }
             user.setEmail(userDTO.getEmail());
         }
-        
+
         // 更新其他字段
         if (userDTO.getPhone() != null) {
             user.setPhone(userDTO.getPhone());
@@ -157,12 +163,12 @@ public class UserServiceImpl implements UserService {
         if (userDTO.getAvatarUrl() != null && !userDTO.getAvatarUrl().isEmpty()) {
             user.setAvatar(userDTO.getAvatarUrl());
         }
-        
+
         // 如果需要更新密码
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
-        
+
         return userRepository.save(user);
     }
 }

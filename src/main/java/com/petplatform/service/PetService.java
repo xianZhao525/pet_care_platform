@@ -19,4 +19,6 @@ public interface PetService {
     List<Pet> searchPets(String keyword);
 
     List<Pet> getPetsByType(String type);
+
+    long countByStatus(Pet.PetStatus status);
 }

@@ -12,14 +12,12 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.context.annotation.ComponentScan;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
 // 显式指定扫描 Controller 所在包（最关键）
-@ComponentScan(basePackages = { "com.petplatform.controller.spring", "com.petplatform.service", "com.petplatform.dao" })
+@ComponentScan(basePackages = { "com.petplatform", "com.petplatform.config", "com.petplatform.service",
+        "com.petplatform.dao", "com.petplatform.controller" })
 @ServletComponentScan("com.petplatform")
 
 // @SpringBootApplication

@@ -31,9 +31,7 @@ E:\pet_care_platform\src\main\java\com\petplatform\service\impl\PetServiceImpl.j
 E:\pet_care_platform\src\main\java\com\petplatform\controller\servlet\UserServlet.java
 E:\pet_care_platform\src\main\java\com\petplatform\exception\BusinessException.java
 E:\pet_care_platform\src\main\java\com\petplatform\service\AdoptionService.java
-E:\pet_care_platform\src\main\java\com\petplatform\config\FileUploadConfig.java
 E:\pet_care_platform\src\main\java\com\petplatform\util\PageUtil.java
-E:\pet_care_platform\src\main\java\com\petplatform\config\JspConfig.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\Adoption.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\DonationRecord.java
 E:\pet_care_platform\src\main\java\com\petplatform\service\impl\FosterServiceImpl.java
@@ -43,7 +41,6 @@ E:\pet_care_platform\src\main\java\com\petplatform\service\impl\AdoptionServiceI
 E:\pet_care_platform\src\main\java\com\petplatform\entity\Donation.java
 E:\pet_care_platform\src\main\java\com\petplatform\controller\servlet\BaseServlet.java
 E:\pet_care_platform\src\main\java\com\petplatform\util\ValidationUtil.java
-E:\pet_care_platform\src\main\java\com\petplatform\controller\TestController.java
 E:\pet_care_platform\src\main\java\com\petplatform\entity\User.java
 E:\pet_care_platform\src\main\java\com\petplatform\dto\AdoptionDTO.java
 E:\pet_care_platform\src\main\java\com\petplatform\config\SecurityConfig.java
