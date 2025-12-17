@@ -11,27 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
 </head>
 <body>
-    <%-- 引入公共导航栏 --%>
     <%@ include file="../common/navbar.jsp" %>
     
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <%-- 在 auth-header 下方添加 --%>
-
-                <%-- 显示Flash错误消息 --%>
-                <c:if test="${not empty error}">
-                    <div class="error-message" style="display: block; margin-bottom: 20px;">
-                        <i class="fas fa-exclamation-circle"></i> ${error}
-                    </div>
-                </c:if>
-
-                <%-- 显示表单验证错误 --%>
-                <c:if test="${bindingResult.hasErrors()}">
-                    <div class="error-message" style="display: block; margin-bottom: 20px;">
-                        <i class="fas fa-exclamation-circle"></i> 请检查表单输入
-                    </div>
-                </c:if>
                 <a href="${pageContext.request.contextPath}/" class="auth-logo">
                     <i class="fas fa-paw"></i>
                 </a>
@@ -39,21 +23,19 @@
                 <p class="auth-subtitle">加入我们，为流浪宠物提供一个温暖的家</p>
             </div>
             
-            <%-- 显示注册错误消息（Flash属性） --%>
+            <%-- 显示错误/成功消息 --%>
             <c:if test="${not empty error}">
                 <div class="error-message" style="display: block; margin-bottom: 20px;">
                     <i class="fas fa-exclamation-circle"></i> ${error}
                 </div>
             </c:if>
             
-            <%-- 显示表单验证错误 --%>
             <c:if test="${bindingResult.hasErrors()}">
                 <div class="error-message" style="display: block; margin-bottom: 20px;">
                     <i class="fas fa-exclamation-circle"></i> 请检查表单输入
-                </div>
-            </c:if>
+                </c:if>
             
-            <%-- 注册表单 --%>
+            <%-- ✅ 注册表单 --%>
             <form id="registerForm" action="${pageContext.request.contextPath}/user/register" method="POST">
                 <div class="form-group">
                     <label for="username" class="form-label">用户名 <span class="required">*</span></label>
@@ -62,10 +44,6 @@
                         <input type="text" id="username" name="username" class="form-control" 
                                value="${userDTO.username}" placeholder="请输入用户名" required autofocus>
                     </div>
-                    <%-- 显示用户名验证错误 --%>
-                    <c:if test="${bindingResult.hasFieldErrors('username')}">
-                        <div class="error-text">${bindingResult.getFieldError('username').defaultMessage}</div>
-                    </c:if>
                 </div>
 
                 <div class="form-group">
@@ -75,10 +53,6 @@
                         <input type="tel" id="phone" name="phone" class="form-control" 
                                value="${userDTO.phone}" placeholder="请输入手机号码" required>
                     </div>
-                    <%-- 显示手机号验证错误 --%>
-                    <c:if test="${bindingResult.hasFieldErrors('phone')}">
-                        <div class="error-text">${bindingResult.getFieldError('phone').defaultMessage}</div>
-                    </c:if>
                 </div>
                 
                 <div class="form-group">
@@ -86,7 +60,7 @@
                     <div class="input-with-icon">
                         <i class="fas fa-envelope input-icon"></i>
                         <input type="email" id="email" name="email" class="form-control" 
-                               value="${userDTO.email}" placeholder="请输入电子邮箱（可选）">
+                               value="${userDTO.email}" placeholder="请输入电子邮箱">
                     </div>
                 </div>
                 
@@ -97,10 +71,6 @@
                         <input type="password" id="password" name="password" class="form-control" 
                                placeholder="请输入密码（至少6位）" required>
                     </div>
-                    <%-- 显示密码验证错误 --%>
-                    <c:if test="${bindingResult.hasFieldErrors('password')}">
-                        <div class="error-text">${bindingResult.getFieldError('password').defaultMessage}</div>
-                    </c:if>
                     
                     <div class="password-strength">
                         <div class="password-strength-bar" id="passwordStrengthBar"></div>
@@ -133,30 +103,32 @@
                     <div class="password-strength-text" id="passwordMatchText"></div>
                 </div>
                 
+                <%-- ✅ 角色选择 --%>
                 <div class="form-group">
                     <label class="form-label">注册身份</label>
                     <div class="role-selection">
                         <label class="role-option">
-                            <input type="radio" name="role" value="USER" checked onchange="toggleAdminCode()">
+                            <input type="radio" name="role" value="USER" checked>
                             <span><i class="fas fa-user"></i> 普通用户</span>
                         </label>
                         <label class="role-option">
-                            <input type="radio" name="role" value="ADMIN" onchange="toggleAdminCode()">
+                            <input type="radio" name="role" value="ADMIN">
                             <span><i class="fas fa-user-shield"></i> 管理员</span>
                         </label>
                     </div>
                 </div>
-
+                
+                <%-- ✅ 管理员注册码 --%>
                 <div class="form-group" id="adminCodeGroup" style="display: none;">
                     <label for="adminCode" class="form-label">管理员注册码 <span class="required">*</span></label>
                     <div class="input-with-icon">
                         <i class="fas fa-key input-icon"></i>
                         <input type="password" id="adminCode" name="adminCode" class="form-control" 
-                            placeholder="请输入管理员注册码">
+                               placeholder="请输入管理员注册码">
                     </div>
                     <small class="form-text text-muted">只有管理员才需要填写此项</small>
                 </div>
-
+                
                 <div class="form-group">
                     <div class="terms-agreement">
                         <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
@@ -178,40 +150,34 @@
         </div>
     </div>
 
-    <%-- 引入公共页脚 --%>
-    <%-- <%@ include file="../common/footer.jsp" %> --%>
+    <%@ include file="../common/footer.jsp" %>
     
     <script>
-        // 切换管理员注册码输入框显示/隐藏
+        // ✅ 将函数定义在全局作用域
         function toggleAdminCode() {
             const adminRadio = document.querySelector('input[name="role"][value="ADMIN"]');
             const adminCodeGroup = document.getElementById('adminCodeGroup');
             const adminCodeInput = document.getElementById('adminCode');
             
-            if (adminRadio.checked) {
+            if (adminRadio && adminRadio.checked) {
                 adminCodeGroup.style.display = 'block';
                 adminCodeInput.required = true;
             } else {
                 adminCodeGroup.style.display = 'none';
                 adminCodeInput.required = false;
-                adminCodeInput.value = ''; 
+                adminCodeInput.value = '';
             }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // ✅ 页面加载时执行一次
             toggleAdminCode();
-        
+            
             // ✅ 为radio按钮添加事件监听
             const roleRadios = document.querySelectorAll('input[name="role"]');
             roleRadios.forEach(radio => {
                 radio.addEventListener('change', toggleAdminCode);
             });
-
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const passwordStrengthBar = document.getElementById('passwordStrengthBar');
-            const passwordStrengthText = document.getElementById('passwordStrengthText');
-            const passwordMatchText = document.getElementById('passwordMatchText');
             
             // 密码强度检查
             function checkPasswordStrength(password) {
@@ -320,6 +286,12 @@
                 }
             }
             
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+            const passwordStrengthText = document.getElementById('passwordStrengthText');
+            const passwordMatchText = document.getElementById('passwordMatchText');
+            
             // 事件监听
             passwordInput.addEventListener('input', function() {
                 checkPasswordStrength(this.value);
@@ -355,9 +327,9 @@
                     alert('请先同意服务条款和隐私政策');
                     return;
                 }
-
+                
                 // 验证管理员注册码
-                if (adminRadio.checked) {
+                if (adminRadio && adminRadio.checked) {
                     const adminCode = document.getElementById('adminCode').value.trim();
                     if (!adminCode) {
                         e.preventDefault();
@@ -371,16 +343,6 @@
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 注册中...';
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.7';
-            });
-            
-            // 3秒后隐藏成功/错误消息
-            const messages = document.querySelectorAll('.error-message, .success-message');
-            messages.forEach(msg => {
-                if (msg.style.display === 'block') {
-                    setTimeout(() => {
-                        msg.style.display = 'none';
-                    }, 5000);
-                }
             });
         });
     </script>

@@ -26,12 +26,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Value("${app.admin.registration.code:DEFAULT_ADMIN_2025}")
+    @Value("${app.admin.registration.code}")
     private String adminRegistrationCode;
 
     @Override
     public User registerUser(UserDTO userDTO) {
-        System.out.println("🎯 开始注册用户: " + userDTO.getUsername() + ", 角色: " + userDTO.getRole());
+        System.out.println("======================================");
+        System.out.println("🎯 UserServiceImpl.registerUser() 开始执行");
+        System.out.println("用户名: " + userDTO.getUsername());
+        System.out.println("手机号: " + userDTO.getPhone());
+        System.out.println("角色: " + userDTO.getRole());
+        System.out.println("======================================");
 
         // 检查用户名是否已存在
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
@@ -41,13 +46,30 @@ public class UserServiceImpl implements UserService {
         // ✅ 角色验证和转换
         User.UserRole role = User.UserRole.USER; // 默认普通用户
         if ("ADMIN".equals(userDTO.getRole())) {
-            // 验证管理员注册码
-            if (userDTO.getAdminCode() == null || !userDTO.getAdminCode().equals(adminRegistrationCode)) {
-                System.out.println("❌ 管理员注册码错误: " + userDTO.getAdminCode());
-                throw new RuntimeException("管理员注册码错误，无法注册管理员账户");
+            if ("ADMIN".equals(userDTO.getRole())) {
+                if (userDTO.getAdminCode() == null || !userDTO.getAdminCode().equals(adminRegistrationCode)) {
+                    System.out.println("❌ 管理员注册码错误 - 输入: " + userDTO.getAdminCode() + ", 期望: " + adminRegistrationCode);
+                    throw new RuntimeException("管理员注册码错误");
+                }
+                System.out.println("✅ 管理员注册码验证通过");
             }
-            role = User.UserRole.ADMIN;
-            System.out.println("✅ 管理员注册码验证通过");
+
+            // String adminCode = userDTO.getAdminCode();
+            // String expectedCode = "ADMIN_2025_SECURE_CODE"; // 硬编码测试，后续可放配置
+            // if (adminCode == null || !adminCode.equals(expectedCode)) {
+            // throw new RuntimeException("管理员注册码错误");
+            // }
+            // role = User.UserRole.ADMIN;
+            // System.out.println("✅ 管理员注册码验证通过");
+
+            // 验证管理员注册码
+            // if (userDTO.getAdminCode() == null ||
+            // !userDTO.getAdminCode().equals(adminRegistrationCode)) {
+            // System.out.println("❌ 管理员注册码错误: " + userDTO.getAdminCode());
+            // throw new RuntimeException("管理员注册码错误，无法注册管理员账户");
+            // }
+            // role = User.UserRole.ADMIN;
+            // System.out.println("✅ 管理员注册码验证通过");
         }
 
         // 创建新用户
@@ -55,11 +77,17 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.getUsername());
         user.setPhone(userDTO.getPhone());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRole(role); // ✅ 设置角色
+
+        String rawPassword = userDTO.getPassword();
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        System.out.println("原始密码: " + rawPassword);
+        System.out.println("加密后密码: " + encodedPassword);
+
+        user.setPassword(encodedPassword);
+        user.setRole(role);
 
         User savedUser = userRepository.save(user);
-        System.out.println("✅ 用户注册成功 - ID: " + savedUser.getId() + ", 角色: " + savedUser.getRole());
+        System.out.println("✅ 用户保存成功 - ID: " + savedUser.getId());
 
         return savedUser;
     }
@@ -68,7 +96,10 @@ public class UserServiceImpl implements UserService {
     public Optional<User> login(String username, String password) {
         return userRepository.findByUsername(username)
                 .map(user -> {
+                    System.out.println("找到用户: " + user.getUsername());
+                    System.out.println("数据库密码: " + user.getPassword());
                     boolean matches = passwordEncoder.matches(password, user.getPassword());
+                    System.out.println("密码匹配: " + matches);
                     return matches ? user : null;
                 });
     }

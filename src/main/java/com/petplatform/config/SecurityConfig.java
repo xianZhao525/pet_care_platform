@@ -12,43 +12,37 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests(auth -> auth
-                        // 静态资源
-                        .antMatchers("/css/**", "/js/**", "/images/**", "/static/**", "/favicon.ico").permitAll()
-                        // 公开页面
-                        .antMatchers("/", "/index", "/pet/**", "/foster/**", "/donation/**",
-                                "/user/login", "/user/register", "/user/logout")
-                        .permitAll()
-                        // ✅ 管理员专用路径
-                        .antMatchers("/admin/**").hasRole("ADMIN")
-                        // 其他需要认证
-                        .anyRequest().authenticated())
-                // 表单登录
-                .formLogin(form -> form
-                        .loginPage("/user/login")
-                        .loginProcessingUrl("/user/login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/user/login?error=true")
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .permitAll())
-                // 注销配置
-                .logout(logout -> logout
-                        .logoutUrl("/user/logout")
-                        .logoutSuccessUrl("/user/login?logout=true")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll());
+        // ✅ 核心修复：移除formLogin配置，让自定义Controller处理所有请求
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf().disable() // 开发环境禁用
+                                .authorizeRequests(auth -> auth
+                                                // 静态资源
+                                                .antMatchers("/css/**", "/js/**", "/images/**", "/static/**",
+                                                                "/favicon.ico")
+                                                .permitAll()
+                                                // 公开页面（注意：必须放行所有/user/**和/admin/**路径）
+                                                .antMatchers("/", "/index", "/pet/**", "/foster/**", "/donation/**",
+                                                                "/user/login", "/user/register", "/user/logout",
+                                                                "/user/**",
+                                                                "/admin/**")
+                                                .permitAll()
+                                                // 其他需要认证
+                                                .anyRequest().authenticated())
+                                // ✅ 移除formLogin配置
+                                .logout(logout -> logout
+                                                .logoutUrl("/user/logout")
+                                                .logoutSuccessUrl("/user/login?logout=true")
+                                                .invalidateHttpSession(true)
+                                                .deleteCookies("JSESSIONID")
+                                                .permitAll());
 
-        return http.build();
-    }
+                return http.build();
+        }
 }
