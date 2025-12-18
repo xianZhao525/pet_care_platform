@@ -20,8 +20,16 @@
                 <p>性别：${pet.gender}</p>
                 <p>${pet.description}</p>
                 <c:if test="${pet.status == 'AVAILABLE'}">
-                    <a href="${ctx}/adoption/apply?petId=${pet.id}" class="btn btn-success">申请领养</a>
+                    <a href="${ctx}/adoption/apply/${pet.id}" class="btn btn-success">申请领养</a>
                 </c:if>
+                <%-- 在申请领养按钮下方添加权限提示 --%>
+                <div style="margin-top: 10px;">
+                    <c:if test="${empty sessionScope.user}">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-info-circle"></i> 请先 <a href="${ctx}/user/login">登录</a> 后再申请领养
+                        </div>
+                    </c:if>
+                </div>
             </div>
         </div>
     </div>

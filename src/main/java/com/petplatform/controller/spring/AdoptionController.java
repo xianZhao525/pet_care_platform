@@ -55,6 +55,15 @@ public class AdoptionController {
             HttpSession session,
             Model model) {
 
+        System.out.println("========== FORM SUBMIT DEBUG ==========");
+        System.out.println("User in session: " + session.getAttribute("user"));
+        System.out.println("AdoptionDTO: " + adoptionDTO);
+        System.out.println("BindingResult has errors: " + result.hasErrors());
+        if (result.hasErrors()) {
+            result.getAllErrors()
+                    .forEach(error -> System.out.println("Validation Error: " + error.getDefaultMessage()));
+        }
+
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";

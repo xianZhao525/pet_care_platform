@@ -97,7 +97,7 @@
             <li><a href="${pageContext.request.contextPath}/pet/list" class="${currentPath.startsWith('/pet') ? 'active' : ''}">领养宠物</a></li>
             <li><a href="${pageContext.request.contextPath}/foster/list" class="${currentPath.startsWith('/foster') ? 'active' : ''}">临时寄养</a></li>
             <li><a href="${pageContext.request.contextPath}/donation/list" class="${currentPath.startsWith('/donation') ? 'active' : ''}">爱心捐赠</a></li>
-            <li><a href="${pageContext.request.contextPath}/about" class="${currentPath == '/about' ? 'active' : ''}">关于我们</a></li>
+            <%-- <li><a href="${pageContext.request.contextPath}/about" class="${currentPath == '/about' ? 'active' : ''}">关于我们</a></li> --%>
         </ul>
         <div class="auth-buttons">
             <c:choose>

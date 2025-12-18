@@ -21,18 +21,19 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
-                                .csrf().disable() // 开发环境禁用
+                                .csrf().disable()
                                 .authorizeRequests(auth -> auth
                                                 // 静态资源
                                                 .antMatchers("/css/**", "/js/**", "/images/**", "/static/**",
                                                                 "/favicon.ico")
                                                 .permitAll()
-                                                // 公开页面（注意：必须放行所有/user/**和/admin/**路径）
                                                 .antMatchers("/", "/index", "/pet/**", "/foster/**", "/donation/**",
+                                                                "/adoption/**",
                                                                 "/user/login", "/user/register", "/user/logout",
-                                                                "/user/**",
-                                                                "/admin/**")
+                                                                "/user/**")
                                                 .permitAll()
+                                                // 管理员路径
+                                                .antMatchers("/admin/**").hasRole("ADMIN")
                                                 // 其他需要认证
                                                 .anyRequest().authenticated())
                                 // ✅ 移除formLogin配置
